@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>奢眼 SHÉYAN · 产品设计方案（PRD）</title>
+<style>
+:root {
+  --ink: #17171A; --ink2: #55565C; --ink3: #8E9098;
+  --accent: #8C6A3F; --soft: #F1E9DC;
+  --up: #C0392B; --down: #1E8E5A;
+  --line: #E7E3DC; --card: #fff; --bg: #F7F5F1;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  line-height: 1.75; -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 880px; margin: 0 auto; padding: 40px 28px 80px; }
+
+/* 头部 */
+.hero {
+  background: linear-gradient(135deg, #2A2622 0%, #17171A 100%);
+  color: #fff; border-radius: 22px; padding: 42px 40px; margin-bottom: 36px;
+}
+.hero .en { color: #C9A87C; letter-spacing: 4px; font-size: 12px; font-weight: 700; }
+.hero h1 { font-size: 34px; margin: 10px 0 6px; letter-spacing: 1px; }
+.hero .sub { font-size: 15px; color: rgba(255,255,255,.75); }
+.hero .meta { display: flex; gap: 20px; margin-top: 22px; flex-wrap: wrap; }
+.hero .meta div { font-size: 12px; color: rgba(255,255,255,.55); }
+.hero .meta b { display: block; color: #E8C995; font-size: 13px; margin-bottom: 2px; }
+
+h2 {
+  font-size: 21px; margin: 48px 0 18px; padding-left: 14px;
+  border-left: 4px solid var(--accent); letter-spacing: .5px;
+}
+h3 { font-size: 16px; margin: 28px 0 10px; color: var(--ink); }
+p { font-size: 14px; color: var(--ink2); margin: 10px 0; }
+b { color: var(--ink); }
+
+table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 14px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.05); margin: 14px 0; font-size: 13px; }
+th { background: var(--soft); color: var(--ink); text-align: left; padding: 11px 14px; font-size: 12.5px; white-space: nowrap; }
+td { padding: 11px 14px; border-top: 1px solid var(--line); color: var(--ink2); vertical-align: top; }
+td:first-child { color: var(--ink); font-weight: 600; white-space: nowrap; }
+
+.card {
+  background: var(--card); border-radius: 16px; padding: 22px 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.05); margin: 14px 0;
+}
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 640px) { .grid2 { grid-template-columns: 1fr; } }
+
+.stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 16px 0; }
+@media (max-width: 640px) { .stat-row { grid-template-columns: repeat(2, 1fr); } }
+.stat {
+  background: var(--card); border-radius: 14px; padding: 16px; text-align: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,.05);
+}
+.stat .v { font-size: 22px; font-weight: 800; color: var(--accent); }
+.stat .k { font-size: 11px; color: var(--ink3); margin-top: 4px; line-height: 1.5; }
+
+.quote {
+  border-left: 4px solid var(--accent); background: var(--soft);
+  padding: 14px 18px; border-radius: 0 12px 12px 0; font-size: 13.5px;
+  color: var(--ink2); margin: 16px 0;
+}
+
+/* 信息架构树 */
+.ia { font-size: 13px; }
+.ia .lvl1 {
+  background: var(--ink); color: #fff; display: inline-block;
+  padding: 6px 16px; border-radius: 8px; font-weight: 700; margin: 10px 0 6px;
+}
+.ia .lvl2 { margin: 8px 0 4px 18px; font-weight: 700; color: var(--accent); }
+.ia .lvl3 { margin: 3px 0 3px 40px; color: var(--ink2); }
+.ia .lvl3::before { content: "· "; color: var(--accent); font-weight: 800; }
+
+.pill {
+  display: inline-block; font-size: 11px; padding: 2px 9px; border-radius: 20px;
+  background: var(--soft); color: var(--accent); font-weight: 700; margin: 0 3px 3px 0;
+}
+.pill.red { background: rgba(192,57,43,.1); color: var(--up); }
+.pill.green { background: rgba(30,142,90,.1); color: var(--down); }
+.pill.gray { background: #EDEDEB; color: var(--ink2); }
+
+.note { font-size: 12px; color: var(--ink3); }
+ul.clean { padding-left: 18px; margin: 8px 0; }
+ul.clean li { font-size: 13.5px; color: var(--ink2); margin: 6px 0; }
+
+.footer { margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 12px; color: var(--ink3); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <div class="en">SHÉYAN · PRODUCT DESIGN DOCUMENT</div>
+    <h1>奢眼 · 二奢商家行情与产品智库</h1>
+    <div class="sub">让每一笔收货报价，都有据可依。</div>
+    <div class="meta">
+      <div><b>版本</b>PRD v1.0（MVP）</div>
+      <div><b>日期</b>2026-09-24</div>
+      <div><b>目标用户</b>二手奢侈品商家 / 从业者</div>
+      <div><b>配套原型</b>index.html（可交互 Demo）</div>
+    </div>
+  </div>
+
+  <!-- ============ 1 ============ -->
+  <h2>一、项目背景与机会</h2>
+  <div class="stat-row">
+    <div class="stat"><div class="v">1380亿</div><div class="k">2025 中国二奢交易规模<br>同比 +17.6%</div></div>
+    <div class="stat"><div class="v">1800亿</div><div class="k">2026 年预计市场规模<br>增速为一手市场 4 倍</div></div>
+    <div class="stat"><div class="v">&lt;10%</div><div class="k">国内二奢渗透率<br>欧美成熟市场 20%~30%</div></div>
+    <div class="stat"><div class="v">72%</div><div class="k">消费者遭遇过回收乱象<br>（到店压价 / 隐形收费）</div></div>
+  </div>
+
+  <p>行业正从「货源竞争」转向「信任与效率竞争」。2026 年被称为<b>「奢侈品回收合规元年」</b>：《奢侈品鉴定技术规范》《二手货品质鉴定通则（GB/T 21667-2024）》等国家标准落地，各地监管要求持证上岗、仪器定级、报价可溯源。</p>
+
+  <div class="quote">
+    <b>核心洞察：</b>二奢商家的日常经营，本质是围绕「行情信息差」和「鉴定确定性」做决策——
+    收货怕收贵、报价怕报错、出货怕压货。而行情数据散落在各类公开报道与同行网络中，
+    缺一个为商家整合「产品知识 × 实时行情 × 计价逻辑」的轻量决策工具。
+  </div>
+
+  <!-- ============ 2 ============ -->
+  <h2>二、竞品分析与差异化定位</h2>
+  <table>
+    <tr><th>竞品</th><th>定位</th><th>核心能力</th><th>对商家尚未满足的点</th></tr>
+    <tr><td>奢当家</td><td>二奢店铺经营中台</td><td>进销存、同行货源展会、公价查询、AI 识图、鉴定兜底、多平台分销</td><td>重「管货管账」，行情以货源展销为主，缺少结构化的<b>产品知识与行情研判</b>层</td></tr>
+    <tr><td>红布林 / 只二 / 95分</td><td>C 端二手交易平台</td><td>寄卖撮合、平台质检</td><td>服务买家，不服务商家经营决策</td></tr>
+    <tr><td>腕表之家 / WatchCharts</td><td>腕表垂类行情</td><td>表款数据库、二手指数</td><td>只覆盖腕表，缺包袋与首饰</td></tr>
+    <tr><td>公众号 / 自媒体行情贴</td><td>碎片化信息</td><td>免费、更新勤</td><td>无结构、无口径、不可检索、难以直接支撑报价</td></tr>
+  </table>
+
+  <div class="card">
+    <h3 style="margin-top:0">奢眼的定位</h3>
+    <p><b>「行情参谋」而非「管理系统」</b>：不与奢当家竞争进销存与货源交易，而是补齐它上游的「认知与定价」环节——
+    做商家在收货、报价、向客户解释价格时，每天要打开 10 次的那个查询与测算工具。</p>
+    <p>
+      <span class="pill">产品图鉴：懂货</span>
+      <span class="pill">行情中心：懂价</span>
+      <span class="pill">计价模型：懂定价</span>
+      <span class="pill">鉴定知识库：懂验货</span>
+      <span class="pill">决策助手：懂推荐</span>
+    </p>
+    <p class="note">一句话价值主张：把行业公开知识变成商家桌上的一台「报价计算器 + 行情终端」。</p>
+  </div>
+
+  <!-- ============ 3 ============ -->
+  <h2>三、目标用户与核心场景</h2>
+  <table>
+    <tr><th>画像</th><th>特征</th><th>高频场景</th><th>奢眼提供的价值</th></tr>
+    <tr><td>中小二奢店主</td><td>1~5 人团队，包袋为主兼营表/首饰</td><td>客户到店卖包 → 判断真伪 → 当场报价</td><td>计价器 + 鉴定要点速查，报价有依据、有底稿</td></tr>
+    <tr><td>直播 / 线上商家</td><td>流量款走量，依赖周转速度</td><td>选品 → 判断流通性 → 定价上架</td><td>热门榜、涨跌榜、保值率梯队辅助选品与压价决策</td></tr>
+    <tr><td>典当 / 回收从业者</td><td>资金成本敏感，赚价差与利息</td><td>大额标的（名表/BKC）快速研判</td><td>行情区间 + 风险提示 + 毛利测算，控制单笔风险</td></tr>
+    <tr><td>新入行者</td><td>缺行业知识与价格体感</td><td>学习品牌规则、术语、避坑</td><td>品牌图谱 + 配货规则 + 避坑清单，降低入门学费</td></tr>
+  </table>
+
+  <!-- ============ 4 ============ -->
+  <h2>四、功能架构</h2>
+  <div class="card ia">
+    <div class="lvl1">奢眼 App</div>
+    <div class="lvl2">1. 行情首页（每日打开的第一屏）</div>
+    <div class="lvl3">奢眼价格指数（包袋/腕表/首饰三品类加权）</div>
+    <div class="lvl3">今日涨跌榜（涨幅榜 / 跌幅榜切换）</div>
+    <div class="lvl3">热门款式行情（按热度排序）</div>
+    <div class="lvl3">今日行情提示（风险日历 / 口径提醒）</div>
+
+    <div class="lvl2">2. 行情中心（深度行情）</div>
+    <div class="lvl3">指数走势详解（近 2 年 9 个观测点）</div>
+    <div class="lvl3">保值率梯队（T0 硬通货 → T4 低保值五档）</div>
+    <div class="lvl3">品牌行情榜（16 品牌保值率与趋势，可点入）</div>
+    <div class="lvl3">公价 vs 回收价对照条形图（识别超公价款）</div>
+
+    <div class="lvl2">3. 品牌图鉴（产品知识库）</div>
+    <div class="lvl3">品牌图谱：16 品牌 × 包袋/腕表/首饰三品类，按梯队组织</div>
+    <div class="lvl3">品牌详情：品牌介绍、行业规则（配货/调价/鉴定口径）、风险提示</div>
+    <div class="lvl3">产品库：30 款核心单品，含公价、回收参考区间、保值率、涨跌幅、热度</div>
+    <div class="lvl3">产品详情：介绍、收发货风险点、经营建议、价格走势（示意）</div>
+    <div class="lvl3">全局搜索：品牌 / 款式 / 材质关键词直达</div>
+
+    <div class="lvl2">4. 工具箱（商家生产力）</div>
+    <div class="lvl3">回收计价模型：五步定价法（基准价 → 成色 → 附件 → 原装度 → 实时行情）</div>
+    <div class="lvl3">计价器：选款式 + 成色 + 附件 + 扣减 → 参考报价与区间</div>
+    <div class="lvl3">毛利测算：按零售加价估算单件毛利与毛利率</div>
+    <div class="lvl3">风险对照清单：先高后低 / 隐形扣费 / 夸大瑕疵等五大套路的应对</div>
+    <div class="lvl3">鉴定知识库：香奈儿 / LV / 迪奥 / 爱马仕 / 梵克雅宝 / 卡地亚 / 劳力士 + 通用逻辑</div>
+    <div class="lvl3">避坑清单：9 条收货前核对项（预算/尺寸/颜色/材质/附件/真伪/养护/行情）</div>
+
+    <div class="lvl2">5. 决策助手（推荐引擎）</div>
+    <div class="lvl3">预算 × 场景双维筛选（1万~30万 × 5 场景）</div>
+    <div class="lvl3">场景优选：资深买手视角的结构化推荐理由</div>
+    <div class="lvl3">预算内可选清单：按保值率排序，标注「预算内 / 需小幅超预算」</div>
+    <div class="lvl3">三类人群速配：高净值 / 预算有限 / 慎入品类</div>
+  </div>
+
+  <!-- ============ 5 ============ -->
+  <h2>五、核心功能详述</h2>
+
+  <h3>5.1 行情中心 <span class="pill gray">用户优先级 P0</span></h3>
+  <ul class="clean">
+    <li><b>三层价格口径</b>：专柜公价 / 二手零售价 / 回收价。页面明确标注「回收价与零售价之间的差价是二手商的毛利与风险准备」，防止用户混淆口径。</li>
+    <li><b>保值率五档梯队</b>：T0（爱马仕 BKC、鹦鹉螺，110%+）→ T4（轻奢/时装表/银饰，&lt;40%），直接回答「什么值得收」。</li>
+    <li><b>超公价识别</b>：条形图中深色段超出浅色段即为二级市场溢价款（Birkin 金刚色、熊猫迪等），这是商家最需要一眼看到的信号。</li>
+    <li><b>品类趋势</b>：包袋 +1.8% / 腕表 -6.4% / 首饰 +2.6%，配一句话归因，帮助判断资金分配方向。</li>
+  </ul>
+
+  <h3>5.2 产品图鉴 <span class="pill gray">P0</span></h3>
+  <ul class="clean">
+    <li>收录 <b>16 品牌 / 30 款核心单品</b>，字段统一为：系列、材质规格、专柜公价、95新全套回收参考区间、保值率、近 90 天涨跌、热度、标签、产品介绍、风险点、经营建议。</li>
+    <li>品牌详情内置<b>行业规则卡</b>：如爱马仕配货比例（丝巾/成衣/珠宝 100% 计入，香水彩妆不计入）、香奈儿每年 3 月/9 月两轮调价、迪奥产地代码（01 意大利 / 04 法国，其余判假）。</li>
+    <li>所有价格页脚强制展示<b>口径与免责声明</b>（95新、全套附件、数据日期），养成商家「报价带日期水印」的职业习惯。</li>
+  </ul>
+
+  <h3>5.3 计价模型与计价器 <span class="pill gray">P0 · 商家独有</span></h3>
+  <div class="card">
+    <p style="margin-top:0"><b>五步定价法</b>（正规机构与套路中介的分水岭）：</p>
+    <table style="box-shadow:none;margin:0">
+      <tr><th>步骤</th><th>系数/权重</th><th>说明</th></tr>
+      <tr><td>① 品类基准行情价</td><td>主锚点</td><td>品牌 + 系列 + 尺寸 + 材质的当日行情基准</td></tr>
+      <tr><td>② 成色系数</td><td>0.72 ~ 1.00</td><td>99新足额；磨损/翻新按档折价；正常使用痕迹与人为损伤分开评估</td></tr>
+      <tr><td>③ 附件系数</td><td>0.75 ~ 1.22</td><td>全套 +8%~22%；缺保卡 -12%~25%；裸件折价最大</td></tr>
+      <tr><td>④ 原装度扣减</td><td>0 ~ 50%</td><td>后配五金、内衬翻新、局部补漆、高仿拼接</td></tr>
+      <tr><td>⑤ 实时行情联动</td><td>随行就市</td><td>不沿用旧行情虚高引流</td></tr>
+    </table>
+  </div>
+  <p>计价器输出：<b>参考报价 + ±6% 区间 + 毛利测算</b>（按零售 +18% 示例，并提示行业净利率基准：爱马仕/劳力士 50%~100%，流量款 10%~20%，行业平均净利率不足 8%）。</p>
+
+  <h3>5.4 鉴定知识库 <span class="pill gray">P1</span></h3>
+  <ul class="clean">
+    <li>按品牌组织<b>「一票否决项 + 高频识别点」</b>：如香奈儿身份卡八角字体与紫光荧光行、迪奥烫印 S 字倾斜 15° 与产地代码、爱马仕马鞍针法与工匠钢印、梵克雅宝四叶草 10 颗金珠排列。</li>
+    <li>强调<b>交叉验证原则</b>：至少两个维度相互印证（身份卡/镭射标 + 五金刻印 + NFC/气味），单看小票或防尘袋极易被高仿迷惑。</li>
+    <li>明确边界：知识库仅供预检，真伪判定须持证鉴定师 + 仪器（光谱仪、显微镜、校表仪）完成——这与 2026 年合规方向一致。</li>
+  </ul>
+
+  <h3>5.5 选购决策助手 <span class="pill gray">P1</span></h3>
+  <ul class="clean">
+    <li>预算（1万~30万 七档）× 场景（投资保值/日常通勤/社交场合/送礼/首次购买 五类）双维匹配。</li>
+    <li>推荐理由引用<b>具体行情依据</b>（保值率、流通速度、配货成本），而非空泛话术；同时给出风险对冲提示（如 Mini Kelly 高位回调风险）。</li>
+    <li>内嵌「三类人群速配」与「慎入品类」提示，帮助商家快速教育客户、管理预期。</li>
+  </ul>
+
+  <!-- ============ 6 ============ -->
+  <h2>六、数据来源与更新机制</h2>
+  <table>
+    <tr><th>数据类型</th><th>MVP 来源</th><th>更新频率</th><th>V2 演进方向</th></tr>
+    <tr><td>专柜公价</td><td>品牌官网 / 专柜公开价整理</td><td>品牌调价日（爱马仕 1 月、香奈儿 3/9 月等）</td><td>爬虫 + 人工复核自动同步</td></tr>
+    <tr><td>二手回收参考价</td><td>公开行情报道、回收商报价、二手平台挂牌整理</td><td>周更</td><td>接入成交数据源（WatchCharts 类）+ 平台合作</td></tr>
+    <tr><td>价格指数</td><td>三品类加权模拟（基期 2024-09 = 1000）</td><td>月更</td><td>真实成交权重模型，分城市/渠道口径</td></tr>
+    <tr><td>鉴定知识</td><td>行业公开资料 + 鉴定师访谈整理</td><td>季度审校</td><td>与持证鉴定机构共建、UGC 案例库</td></tr>
+  </table>
+  <p class="note">合规要点：所有价格标注「参考区间 + 数据日期 + 口径（95新/全套）」，不参与交易、不做报价承诺，规避估价纠纷责任。</p>
+
+  <!-- ============ 7 ============ -->
+  <h2>七、商业模式</h2>
+  <table>
+    <tr><th>模式</th><th>说明</th><th>阶段</th></tr>
+    <tr><td>免费增值</td><td>品牌图鉴、指数、避坑清单免费；计价器高级参数、行情明细、走势数据订阅制（如 ¥30~60/月）</td><td>MVP 后期</td></tr>
+    <tr><td>B 端授权</td><td>行情接口 / 白标计价组件输出给回收连锁、典当行、直播间</td><td>V2</td></tr>
+    <tr><td>服务撮合</td><td>鉴定机构、养护服务商入驻导流（CPS），对齐奢当家「同行服务平台」模式但不做自营</td><td>V2+</td></tr>
+    <tr><td>广告与新品宣发</td><td>品牌方新品/调价公告的精准触达（二手价格受公价影响，商家天然关注）</td><td>V3</td></tr>
+  </table>
+
+  <!-- ============ 8 ============ -->
+  <h2>八、版本路线图</h2>
+  <table>
+    <tr><th>版本</th><th>范围</th><th>目标</th></tr>
+    <tr><td>MVP（当前原型）</td><td>5 大模块静态数据版：图鉴 16 品牌 30 款、指数、计价器、鉴定知识库、决策助手</td><td>验证「商家是否愿意每天打开查行情」</td></tr>
+    <tr><td>V1.1</td><td>行情周更机制、收藏与降价提醒、报价单生成（带日期水印，可转发客户）</td><td>形成留存与传播钩子</td></tr>
+    <tr><td>V2</td><td>真实数据源接入、AI 识图估价（拍照识别款式 → 出参考区间）、成交数据众包</td><td>建立数据壁垒</td></tr>
+    <tr><td>V3</td><td>同行行情互查（去中心化报价网络）、鉴定服务撮合、B 端接口</td><td>平台化</td></tr>
+  </table>
+
+  <!-- ============ 9 ============ -->
+  <h2>九、风险与对策</h2>
+  <table>
+    <tr><th>风险</th><th>描述</th><th>对策</th></tr>
+    <tr><td>数据准确性</td><td>行情为非标区间，错误报价导致商家亏损</td><td>坚持「区间而非点值」+ 强制口径标注 + 免责声明；V2 引入多源交叉校验</td></tr>
+    <tr><td>合规风险</td><td>估价类服务可能卷入交易纠纷</td><td>定位信息工具，不参与撮合与结算；遵守二手货鉴定国标</td></tr>
+    <tr><td>竞品挤压</td><td>奢当家等成熟玩家可快速复制行情模块</td><td>差异在「深度内容 + 计价方法论」的运营积累，而非功能本身；快速建立更新频率壁垒</td></tr>
+    <tr><td>知识时效性</td><td>配货规则、防伪体系随品牌策略变化</td><td>季度审校机制 + 用户纠错入口</td></tr>
+  </table>
+
+  <div class="footer">
+    奢眼 SHÉYAN · 产品设计方案 v1.0 · 2026-09-24<br>
+    本文档中的市场数据整理自公开渠道（中国旧货业协会二手奢侈品工作委员会白皮书、艾瑞咨询、贝恩咨询及公开行情报道），仅供参考。
+    配套可交互原型见 index.html。
+  </div>
+
+</div>
+</body>
+</html>

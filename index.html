@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#17171A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="奢眼">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<title>奢眼 SHÉYAN · 二奢行情与库存智库</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="phone">
+
+  <!-- ============ 顶栏 ============ -->
+  <header class="appbar">
+    <div class="ab-row">
+      <div class="ab-brand">
+        <span class="ab-logo">奢眼</span>
+        <span class="ab-en">SHÉYAN</span>
+      </div>
+      <div class="ab-date">
+        <b>行情更新 <span id="dataDate">—</span></b>
+        口径：<span id="metaScope">95新全套</span>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <input id="searchInput" type="search" placeholder="搜品牌 / 款式 / 材质，如 Birkin、CF、绿水鬼">
+    </div>
+  </header>
+
+  <!-- ============ 主体 ============ -->
+  <main class="app-body">
+
+    <!-- ---------- 首页 ---------- -->
+    <section class="view active" id="view-home">
+      <div class="card">
+        <div id="homeIndex"></div>
+      </div>
+
+      <div class="sec-title">
+        今日涨跌榜
+        <div class="seg-group" id="mvTabs">
+          <button class="seg on" data-k="up">涨幅榜</button>
+          <button class="seg" data-k="down">跌幅榜</button>
+        </div>
+      </div>
+      <div class="card"><div id="movers"></div></div>
+
+      <div class="sec-title">二级市场热门经典款 <span class="hint">官网价 vs 二手行情 · 左右滑动查看</span></div>
+      <div id="homeShowcase"></div>
+
+      <div class="mt" id="homeTip"></div>
+
+      <div class="disclaimer">
+        本应用为二奢商家经营辅助工具，所有行情数据整理自公开渠道，为参考区间。
+        实际回收/零售价格受年份、成色、附件完整度、五金状态等影响，
+        须以实物鉴定与当日实时报价为准，不构成任何报价承诺。
+        页面图片为款式示意（AI 生成），非品牌官方产品图。
+      </div>
+    </section>
+
+    <!-- ---------- 行情中心 ---------- -->
+    <section class="view" id="view-market">
+      <div class="sec-title">奢眼二手奢侈品价格指数 <span class="hint">2024.09 基期=1000</span></div>
+      <div class="card">
+        <div id="idxChart"></div>
+        <div class="ex-note">
+          指数由包袋、腕表、首饰三大品类的加权成交价构成。
+          近两年呈「高点回落 → 底部企稳」走势，2026 年 Q3 环比转正。
+        </div>
+      </div>
+
+      <div class="sec-title">保值率梯队 <span class="hint">品牌分化加剧</span></div>
+      <div class="card"><div id="tiers"></div></div>
+
+      <div class="sec-title">品牌行情榜 <span class="hint">点击进入品牌详情</span></div>
+      <div class="card"><div id="brandRank"></div></div>
+
+      <div class="sec-title">公价 vs 回收价 <span class="hint">浅色=公价 深色=回收区间</span></div>
+      <div class="card">
+        <div class="pb-legend">
+          <span class="lg-item"><span class="lg-dot retail"></span>专柜公价</span>
+          <span class="lg-item"><span class="lg-dot range"></span>二手回收区间</span>
+        </div>
+        <div id="priceBars"></div>
+        <div class="ex-note">
+          深色段超出浅色段即代表「超公价」（如爱马仕金刚色、劳力士迪通拿）。
+          同一只表/包存在专柜公价、二手零售价、回收价三层价差，买入价从来不是市场价。
+        </div>
+      </div>
+
+      <div class="disclaimer">
+        数据口径：95 新、全套附件，整理自 2026 年 9 月公开渠道行情报道与二手流通数据平台。
+        同一型号因品相、附件、年份不同存在 ±10% 量级浮动属正常现象。
+      </div>
+    </section>
+
+    <!-- ---------- 品牌 / 产品 ---------- -->
+    <section class="view" id="view-brand">
+      <div class="sec-title">品牌图谱 <span class="hint">包袋 · 腕表 · 首饰</span></div>
+      <div id="brandChips" class="chip-row"></div>
+      <div class="brand-grid" id="brandGrid"></div>
+
+      <div class="card mt">
+        <div class="card-t">品牌梯队速记</div>
+        <div class="d-points">
+          <div class="d-point"><span class="dot"></span><b>顶奢</b>：爱马仕、香奈儿 —— 稀缺性驱动，二手可溢价</div>
+          <div class="d-point"><span class="dot"></span><b>硬奢</b>：劳力士、百达翡丽、爱彼 —— 资产属性强，波动大</div>
+          <div class="d-point"><span class="dot"></span><b>一线</b>：LV、迪奥、古驰、欧米茄、卡地亚 —— 靠流量与成色</div>
+          <div class="d-point"><span class="dot"></span><b>高珠</b>：梵克雅宝、卡地亚首饰、宝格丽 —— 材质决定保值下限</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- 产品列表 ---------- -->
+    <section class="view" id="view-products">
+      <div id="prodHeader"></div>
+      <div class="chip-row" id="prodSort"></div>
+      <div id="prodList"></div>
+      <div class="disclaimer">
+        回收参考价为 95 新、全套附件口径。裸包/单表、缺保卡、缺配件需按折价系数下调。
+      </div>
+    </section>
+
+    <!-- ---------- 产品详情 ---------- -->
+    <section class="view" id="view-detail">
+      <div class="ph-top"><button class="back" onclick="history.back()">‹ 返回</button></div>
+      <div id="detailBody"></div>
+      <div class="disclaimer">
+        以上数据整理自公开渠道，随市场波动，仅供参考。最终以实物检测与当日实时行情为准。
+      </div>
+    </section>
+
+    <!-- ---------- 工具箱 ---------- -->
+    <section class="view" id="view-tool">
+      <div class="sec-title">回收计价模型 <span class="hint">五步定价法</span></div>
+      <div class="card">
+        <div class="pm-step" style="padding-top:0">
+          <div class="pm-d" style="margin-bottom:4px">
+            非标品定价的核心是「有据可依」。以下五步是正规机构与套路中介的分水岭 ——
+            讲得清逻辑的报价，才值得深谈。
+          </div>
+        </div>
+        <div id="pmSteps"></div>
+      </div>
+
+      <div class="sec-title">计价示例 <span class="hint">一张报价单怎么诞生</span></div>
+      <div class="card"><div id="pmExample"></div></div>
+
+      <div class="sec-title">计价器 <span class="hint">输入参数自动测算</span></div>
+      <div class="card">
+        <div class="calc-field">
+          <label>选择款式</label>
+          <select id="calcProducts"></select>
+        </div>
+        <div class="calc-field">
+          <label>成色等级</label>
+          <select id="calcCond">
+            <option value="1">99新（近全新，无使用痕迹）</option>
+            <option value="0.9" selected>95新（轻微使用痕迹）</option>
+            <option value="0.82">9成新（明显使用痕迹）</option>
+            <option value="0.72">8.5成新及以下（磨损/需修复）</option>
+          </select>
+        </div>
+        <div class="calc-field">
+          <label>附件完整度</label>
+          <select id="calcAttach">
+            <option value="1.22">全套齐全（盒/防尘袋/票/保卡） +22%</option>
+            <option value="1.1" selected>较齐全（缺部分配件） +10%</option>
+            <option value="1">仅主体 + 防尘袋</option>
+            <option value="0.85">裸件（无任何附件） -15%</option>
+            <option value="0.75">缺保卡（腕表专用） -25%</option>
+          </select>
+        </div>
+        <div class="calc-field">
+          <label>原装度扣减（翻新/后配五金/补漆，%）</label>
+          <input id="calcDeduct" type="number" min="0" max="50" value="0" step="1">
+        </div>
+        <div id="calcOut"></div>
+      </div>
+
+      <div class="sec-title">毛利测算 <span class="hint">按零售 +18% 估算</span></div>
+      <div class="card"><div id="calcProfit"></div></div>
+
+      <div class="sec-title">风险对照清单 <span class="hint">商家侧常见套路</span></div>
+      <div class="card"><div id="pmRisks"></div></div>
+
+      <div class="sec-title">鉴定知识库 <span class="hint">核心识别点</span></div>
+      <div class="chip-row" id="authTabs"></div>
+      <div class="card"><div id="authBody"></div></div>
+
+      <div class="sec-title">避坑清单 <span class="hint">收货前逐条核对</span></div>
+      <div class="card"><div id="pitfalls"></div></div>
+
+      <div class="disclaimer">
+        鉴定知识仅供专业参考，不构成鉴定结论。真伪判定须由持证鉴定师结合仪器检测与数据库比对完成。
+      </div>
+    </section>
+
+    <!-- ---------- 决策助手 ---------- -->
+    <section class="view" id="view-me">
+      <div class="sec-title">选购决策助手 <span class="hint">按预算 × 场景匹配</span></div>
+
+      <div class="card">
+        <div class="card-t">预算范围</div>
+        <div class="chip-row" id="budgetChips" style="margin-bottom:0"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-t">使用场景</div>
+        <div class="chip-row" id="scenChips" style="margin-bottom:0"></div>
+      </div>
+
+      <div class="sec-title">场景优选 <span class="hint">资深买手视角</span></div>
+      <div id="scenPick"></div>
+
+      <div class="sec-title">预算内可选 <span class="hint">按保值率排序</span></div>
+      <div id="recList"></div>
+
+      <div class="card mt">
+        <div class="card-t">三类人群速配</div>
+        <div class="d-points">
+          <div class="d-point"><span class="dot"></span><b>高净值买家</b>：闭眼选爱马仕 / 劳力士，看重稀缺与身份标签</div>
+          <div class="d-point"><span class="dot"></span><b>预算有限</b>：盯 LV 老花 / 欧米茄，看重流通性与低试错成本</div>
+          <div class="d-point"><span class="dot"></span><b>轻奢、季节款、时装表</b>：慎入，折价重灾区，不建议长期持有</div>
+        </div>
+      </div>
+
+      <div class="disclaimer">
+        推荐逻辑基于公开行情数据与行业通用经验，不构成投资建议。奢侈品价格具有波动性，请独立判断。
+      </div>
+    </section>
+
+    <!-- ---------- 我的库存 ---------- -->
+    <section class="view" id="view-inv">
+      <div class="sec-title">库存总览 <span class="hint" id="invMeta">—</span></div>
+      <div class="stat-row" id="invStats"></div>
+
+      <div class="sec-title">
+        货品列表
+        <button class="btn-add" onclick="openItemForm(null)">＋ 收新货</button>
+      </div>
+      <div class="chip-row" id="invChips"></div>
+      <div class="chip-row" id="invSortRow" style="margin-top:-6px"></div>
+      <div id="invList"></div>
+
+      <div class="sec-title mt">备份与同步 <span class="hint">数据仅存本机，建议定期备份</span></div>
+      <div class="card">
+        <div class="card-t">本地备份（推荐先做）</div>
+        <div class="btn-row">
+          <button class="btn-sec" onclick="invExport()">⬇ 导出库存文件</button>
+          <button class="btn-sec" onclick="$('#invImport').click()">⬆ 导入库存文件</button>
+        </div>
+        <input type="file" id="invImport" accept=".json" style="display:none" onchange="invImportFile(this)">
+        <div class="ex-note">
+          导出为 JSON 文件，可用于换机或清缓存前的备份；照片不随文件导出（存于本机）。
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-t">GitHub 云备份（跨设备同步）</div>
+        <div class="calc-field">
+          <label>GitHub 用户名</label>
+          <input id="ghOwner" type="text" placeholder="你的 GitHub 用户名">
+        </div>
+        <div class="calc-field">
+          <label>仓库名（建议私有仓库，如 sheyan-data）</label>
+          <input id="ghRepo" type="text" placeholder="sheyan-data">
+        </div>
+        <div class="calc-field">
+          <label>访问令牌 PAT（仅需 Contents 读写权限）</label>
+          <input id="ghPat" type="password" placeholder="github_pat_...">
+        </div>
+        <div class="btn-row">
+          <button class="btn-sec" onclick="ghBackup()">☁ 备份到 GitHub</button>
+          <button class="btn-sec" onclick="ghRestore()">☁ 从 GitHub 恢复</button>
+        </div>
+        <div id="ghStatus" class="ex-note">配置一次即可长期使用；令牌仅保存在本机。</div>
+      </div>
+      <div class="disclaimer">
+        库存数据保存在本机浏览器（IndexedDB），不上传任何服务器；如需跨设备同步请使用上方 GitHub 备份。
+        添加到主屏幕后（iOS：Safari 分享 → 添加到主屏幕；Android：Chrome → 安装应用），即以独立 App 方式运行。
+      </div>
+    </section>
+
+    <!-- ---------- 库存录入/编辑 ---------- -->
+    <section class="view" id="view-itemform">
+      <div class="ph-top"><button class="back" onclick="cancelItemForm()">‹ 返回库存</button></div>
+      <div class="card">
+        <div class="card-t" id="itemFormTitle">收新货</div>
+        <div class="calc-field">
+          <label>从行情库快速填充（可选）</label>
+          <select id="fMarket"><option value="">— 不使用 —</option></select>
+          <div class="ex-note" id="fMarketHint" style="margin-top:6px"></div>
+        </div>
+        <div class="calc-field">
+          <label>品类</label>
+          <select id="fCat">
+            <option value="包袋">包袋</option>
+            <option value="腕表">腕表</option>
+            <option value="首饰">首饰</option>
+          </select>
+        </div>
+        <div class="calc-field">
+          <label>品牌</label>
+          <select id="fBrand"></select>
+        </div>
+        <div class="calc-field" id="fCustomBrandWrap" style="display:none">
+          <label>自定义品牌名</label>
+          <input id="fCustomBrand" type="text" placeholder="如：MCM">
+        </div>
+        <div class="calc-field">
+          <label>款式名称 *</label>
+          <input id="fName" type="text" placeholder="如：Birkin 25 黑金">
+        </div>
+        <div class="calc-field">
+          <label>规格 / 材质</label>
+          <input id="fSpec" type="text" placeholder="如：Togo皮 · 金扣">
+        </div>
+        <div class="calc-field">
+          <label>成色</label>
+          <select id="fCond">
+            <option value="99新">99新（近全新）</option>
+            <option value="95新" selected>95新（轻微使用痕迹）</option>
+            <option value="9成新">9成新（明显使用痕迹）</option>
+            <option value="8.5成新及以下">8.5成新及以下</option>
+          </select>
+        </div>
+        <div class="calc-field">
+          <label>附件</label>
+          <select id="fAttach">
+            <option value="全套">全套（盒/防尘袋/票/保卡）</option>
+            <option value="部分附件" selected>部分附件</option>
+            <option value="裸件">裸件</option>
+          </select>
+        </div>
+        <div class="form-2col">
+          <div class="calc-field">
+            <label>成本价（元）*</label>
+            <input id="fCost" type="number" min="0" step="100" placeholder="15000">
+          </div>
+          <div class="calc-field">
+            <label>挂牌价（元）</label>
+            <input id="fAsk" type="number" min="0" step="100" placeholder="18000">
+          </div>
+        </div>
+        <div class="form-2col">
+          <div class="calc-field">
+            <label>收货日期</label>
+            <input id="fBuyDate" type="date">
+          </div>
+          <div class="calc-field">
+            <label>状态</label>
+            <select id="fStatus">
+              <option value="stock" selected>在库</option>
+              <option value="sold">已售</option>
+            </select>
+          </div>
+        </div>
+        <div id="fSoldWrap" style="display:none">
+          <div class="form-2col">
+            <div class="calc-field">
+              <label>实际售价（元）</label>
+              <input id="fSalePrice" type="number" min="0" step="100" placeholder="0">
+            </div>
+            <div class="calc-field">
+              <label>出售日期</label>
+              <input id="fSaleDate" type="date">
+            </div>
+          </div>
+        </div>
+        <div class="calc-field">
+          <label>备注</label>
+          <textarea id="fNote" rows="2" placeholder="瑕疵、货主、来源渠道等"></textarea>
+        </div>
+        <div class="calc-field">
+          <label>照片（可多选，自动压缩存储）</label>
+          <input type="file" id="fPhotos" accept="image/*" multiple style="display:none" onchange="addPhotos(this)">
+          <div class="photo-row" id="photoRow"></div>
+          <button class="btn-sec" onclick="$('#fPhotos').click()">📷 添加照片</button>
+        </div>
+        <div class="btn-row" style="margin-top:14px">
+          <button class="btn-primary" onclick="saveItem()">保存</button>
+          <button class="btn-danger" id="fDeleteBtn" style="display:none" onclick="deleteItem()">删除此货品</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ 底部导航 ============ -->
+  <nav class="tabbar">
+    <button class="tab on" data-tab="home"><i>◆</i>行情</button>
+    <button class="tab" data-tab="market"><i>◇</i>行情中心</button>
+    <button class="tab" data-tab="brand"><i>◎</i>图鉴</button>
+    <button class="tab" data-tab="tool"><i>▣</i>工具箱</button>
+    <button class="tab" data-tab="me"><i>✦</i>决策</button>
+    <button class="tab" data-tab="inv"><i>▦</i>我的库存</button>
+  </nav>
+
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+<script src="inv.js"></script>
+</body>
+</html>
