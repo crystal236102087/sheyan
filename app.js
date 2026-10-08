@@ -342,11 +342,12 @@ function renderProducts() {
     $("#prodHeader").innerHTML = `
       <div class="ph-top"><button class="back" onclick="backToBrands()">‹ 全部品牌</button></div>
       <div class="ph-brand"><div><div class="ph-name">全部产品</div>
-      <div class="ph-meta">共 ${PRODUCTS.length} 款 · 实时行情库</div></div></div>`;
+      <div class="ph-meta">共 ${PRODUCTS.length} 款 · 精选行情库</div></div></div>`;
   }
 
+  const sTokens = searchTokens(state.search || "");
   let list = PRODUCTS.filter(p => state.brandFilter === "all" || p.brand === state.brandFilter)
-    .filter(p => !state.search || (p.name + p.series + brandOf(p.brand).name + p.spec).toLowerCase().includes(state.search.toLowerCase()));
+    .filter(p => !state.search || matchProduct(p, sTokens));
 
   const sorters = {
     heat:  (a, b) => b.heat - a.heat,
@@ -362,10 +363,36 @@ function renderProducts() {
 
   $("#prodList").innerHTML = list.length
     ? list.map(cardHTML).join("")
-    : `<div class="empty">没有匹配的款式，换个关键词试试</div>`;
+    : `<div class="empty">没有匹配的款式<br><span style="font-size:12px;color:#999;margin-top:8px;display:block">试试：满天星 · 鹦鹉螺 · 熊猫迪 · Birkin · 满钻 · 蓝气球</span></div>`;
 }
 
 function setSort(k) { state.sortBy = k; renderProducts(); }
+
+/* ---------- 搜索：容错归一 + 分词 + 别名匹配 ---------- */
+const SEARCH_STOP = ["手表","腕表","包包","手提包","款式","系列","款","表","包"];
+function normTxt(s){ return (s || "").toLowerCase().replace(/斐/g, "翡"); }
+function squeeze(s){ return normTxt(s).replace(/\s+/g, ""); }
+function searchTokens(q){
+  const t = normTxt(q);
+  if(!t.trim()) return [];
+  let parts = t.split(/[\s,，、/|+]+/).map(w => squeeze(w)).filter(Boolean);
+  if(parts.length === 1){
+    const br = BRANDS.map(b => squeeze(b.name)).sort((a, b) => b.length - a.length)
+      .find(n => parts[0].includes(n) && parts[0].length > n.length);
+    if(br) parts = [br, parts[0].replace(br, "")];
+  }
+  parts = parts.map(w => {
+    for(const s of SEARCH_STOP){ if(w.length > s.length && w.endsWith(s)) return w.slice(0, -s.length); }
+    return w;
+  });
+  return [...new Set(parts)].filter(w => w && !SEARCH_STOP.includes(w));
+}
+function matchProduct(p, tokens){
+  if(!tokens.length) return true;
+  const b = brandOf(p.brand);
+  const hay = squeeze([p.name, p.series, p.spec, b.name, b.en, (p.alias || ""), (p.tags || []).join("|"), (p.points || []).join("|")].join("|"));
+  return tokens.every(w => hay.includes(w));
+}
 
 function cardHTML(p) {
   const b = brandOf(p.brand);
