@@ -762,3 +762,32 @@ textarea#fNote:focus { border-color: var(--accent); }
   opacity: .96;
 }
 .d-hero.has-img { padding-right: 100px; }
+
+/* ============ 行情同步状态徽章 ============ */
+.sync-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 7px;
+  border-radius: 9px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .2px;
+  vertical-align: 1px;
+  background: rgba(0,0,0,.06);
+  color: #8a8a8a;
+  transition: background .25s, color .25s;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.sync-badge.ok {
+  background: rgba(15, 107, 62, .1);
+  color: #0F6B3E;
+}
+.sync-badge.ok::before { content: "● "; font-size: 8px; vertical-align: 2px; }
+.sync-badge.warn {
+  background: rgba(184, 118, 62, .12);
+  color: #B8763E;
+}
+.sync-badge.warn::before { content: "● "; font-size: 8px; vertical-align: 2px; }
+.sync-badge.loading { animation: syncPulse 1.2s ease-in-out infinite; }
+@keyframes syncPulse { 0%,100% { opacity: .45; } 50% { opacity: 1; } }

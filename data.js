@@ -4,7 +4,7 @@
    说明：均为参考区间，实际以实物鉴定与当日实时报价为准
    ============================================================ */
 
-const META = {
+var META = {
   appName: "奢眼",
   appEn: "SHÉYAN",
   slogan: "二奢商家的行情参谋",
@@ -14,7 +14,7 @@ const META = {
 };
 
 /* ---------- 品牌总览 ---------- */
-const BRANDS = [
+var BRANDS = [
   { id: "hermes",   name: "爱马仕",   en: "Hermès",          cat: "包袋", tier: "顶奢", mono: "H",  color: "#B8763E", ret: 138, trend: 6 },
   { id: "chanel",   name: "香奈儿",   en: "Chanel",          cat: "包袋", tier: "顶奢", mono: "CC", color: "#1A1A1A", ret: 82,  trend: 3 },
   { id: "lv",       name: "路易威登", en: "Louis Vuitton",   cat: "包袋", tier: "一线", mono: "LV", color: "#6B4A2F", ret: 68,  trend: -8 },
@@ -39,7 +39,7 @@ const BRANDS = [
 ];
 
 /* ---------- 品牌详情补充 ---------- */
-const BRAND_DETAIL = {
+var BRAND_DETAIL = {
   hermes: {
     intro: "1837年创立于巴黎，以马具起家，至今坚持手工缝制。BKC（Birkin/Kelly/Constance）构成品牌价值核心，年产量极低，配货制形成天然稀缺。二手市场平均保值率断层第一。",
     rules: [
@@ -160,7 +160,7 @@ const BRAND_DETAIL = {
 
 /* ---------- 产品库 ---------- */
 /* price: 专柜公价(元) ; low/high: 95新全套回收参考区间 ; trend: 近90天涨跌% ; ret: 保值率% */
-const PRODUCTS = [
+var PRODUCTS = [
   /* ===== 爱马仕 ===== */
   { id:"h1", img:"img/h1.jpg", brand:"hermes", cat:"包袋", series:"Birkin", name:"Birkin 25 金刚色", spec:"Togo 皮 · 黑金/金棕/大象灰",
     price:115000, low:120000, high:160000, trend:3, ret:130, heat:98,
@@ -782,7 +782,7 @@ const PRODUCTS = [
 ];
 
 /* ---------- 行情/指数模块 ---------- */
-const INDEX = {
+var INDEX = {
   name: "奢眼二手奢侈品价格指数",
   base: 1000,
   points: [
@@ -907,7 +907,7 @@ const SCENARIOS = [
   { id: "entry",  name: "第一次买大牌", icon: "❍", desc: "看重性价比与低风险" }
 ];
 
-const RECOMMEND_RULES = [
+var RECOMMEND_RULES = [
   { scen: "invest", budget: 150000, label: "爱马仕 Birkin 25 金刚色", pid: "h1", why: "二级市场硬通货，金刚色 + 25cm 是溢价最猛组合，转手周期通常不超一周。注意配货成本。" },
   { scen: "invest", budget: 200000, label: "劳力士 熊猫迪 116500LN", pid: "r3", why: "回收价反超公价约 60%，流通性极强。但需注意已从峰值回落，不宜高位追。" },
   { scen: "invest", budget: 50000,  label: "香奈儿 CF 中号 黑金", pid: "c1", why: "市场定海神针，黑金款二手保值率可达 90%~110%，黑金三年增值约 37%，流通以天计算。" },
