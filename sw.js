@@ -7,7 +7,7 @@
    例外：行情数据 quote.json 走「强制网络」策略，永不缓存，
    保证每次打开都向服务器要最新行情。
    ============================================================ */
-const CACHE = "sheyan-cache-v2";
+const CACHE = "sheyan-cache-v3";
 
 self.addEventListener("install", () => self.skipWaiting());
 

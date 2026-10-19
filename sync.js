@@ -82,18 +82,27 @@
       el.textContent = "同步中…";
       el.classList.add("loading");
       el.title = "正在向云端获取最新行情";
-    } else if (s.source === "cloud") {
-      el.textContent = "已是最新";
-      el.classList.add("ok");
-      el.title = "行情已从云端更新 · 点击可重新检查";
-    } else if (s.source === "cache") {
-      el.textContent = "离线缓存";
-      el.classList.add("warn");
-      el.title = "当前使用上次缓存的数据 · 点击重试联网";
+    } else if (!s.updated) {
+      // 还没拿到版本日期时的兜底
+      el.textContent = s.source === "cloud" ? "已同步" : "本地数据";
+      el.classList.add(s.source === "cloud" ? "ok" : "warn");
+      el.title = s.source === "cloud" ? "已同步云端行情" : "未连接到云端，使用内置数据 · 点击重试";
     } else {
-      el.textContent = "本地数据";
-      el.classList.add("warn");
-      el.title = "未连接到云端，使用内置数据 · 点击重试";
+      // 徽章直接显示行情版本日期，避免「已是最新」与日期矛盾
+      const label = "行情 " + s.updated.slice(5);   // 2026-10-19 → 行情 10-19
+      if (s.source === "cloud") {
+        el.textContent = label;
+        el.classList.add("ok");
+        el.title = `已同步云端最新行情（版本 ${s.updated}） · 点击可重新检查`;
+      } else if (s.source === "cache") {
+        el.textContent = label;
+        el.classList.add("warn");
+        el.title = `离线：使用上次缓存行情（版本 ${s.updated}） · 点击重试联网`;
+      } else {
+        el.textContent = label;
+        el.classList.add("warn");
+        el.title = `未联网：使用内置行情（版本 ${s.updated}） · 点击重试`;
+      }
     }
   }
 
