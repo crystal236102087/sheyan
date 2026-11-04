@@ -357,7 +357,7 @@ function renderProducts() {
   };
   list.sort(sorters[state.sortBy]);
 
-  const sorts = [["heat", "热度"], ["ret", "保值率"], ["trend", "涨幅"], ["price", "价格"]];
+  const sorts = [["heat", "热度"], ["ret", "保值率"], ["trend", "近期变动"], ["price", "价格"]];
   $("#prodSort").innerHTML = sorts.map(([k, v]) =>
     `<button class="chip ${state.sortBy === k ? 'on' : ''}" onclick="setSort('${k}')">${v}</button>`).join("");
 
@@ -394,6 +394,26 @@ function matchProduct(p, tokens){
   return tokens.every(w => hay.includes(w));
 }
 
+/* ---------- 口径三要素：没有口径的数字不准进表格 ---------- */
+const BASIS_TEXT = { "回收": "回收价", "零售": "零售价", "成交": "成交价" };
+const BASIS_SHORT = { "回收": "回收", "零售": "零售", "成交": "成交" };
+
+function basisLabel(p) {
+  if (!p.basis) return "未标口径 ⚠";
+  return "95新全套" + BASIS_SHORT[p.basis] + "参考";
+}
+function basisTag(p) {
+  if (!p.basis) return '<span class="tag warn">未标口径</span>';
+  const cls = p.basis === "回收" ? "ok" : p.basis === "零售" ? "warn" : "";
+  return `<span class="tag ${cls}">${BASIS_TEXT[p.basis]}口径</span>`;
+}
+/* 异常涨幅拦截：|trend| ≥ 15% 一律视为待核实，不做涨跌叙事 */
+function isSuspect(p) {
+  return !!p.verify || Math.abs(p.trend || 0) >= 15;
+}
+function badgeCls(p) { return isSuspect(p) ? " suspect" : ""; }
+function badgeMark(p) { return isSuspect(p) ? '<i class="suspect-mark">待核实</i>' : ""; }
+
 function cardHTML(p) {
   const b = brandOf(p.brand);
   const up = p.trend >= 0;
@@ -414,8 +434,8 @@ function cardHTML(p) {
         <div class="pp-val">${fmt(p.price)}</div>
       </div>
       <div class="pc-price-item">
-        <div class="pp-label">二手回收参考</div>
-        <div class="pp-val accent">${fmtShort(p.low)} ~ ${fmtShort(p.high)}</div>
+        <div class="pp-label">${basisLabel(p)}</div>
+        <div class="pp-val accent${badgeCls(p)}">${fmtShort(p.low)} ~ ${fmtShort(p.high)}${badgeMark(p)}</div>
       </div>
       <div class="pc-price-item">
         <div class="pp-label">保值率</div>
@@ -457,7 +477,7 @@ function openDetail(id) {
       <div class="d-hero-brand">${b.name} · ${b.en}</div>
       <h2 class="d-hero-name">${p.name}</h2>
       <div class="d-hero-spec">${p.spec}</div>
-      <div class="d-hero-tags">${p.tags.map(t => `<span class="tag light">${t}</span>`).join("")}</div>
+      <div class="d-hero-tags">${basisTag(p)}${p.tags.map(t => `<span class="tag light">${t}</span>`).join("")}</div>
     </div>
 
     <div class="card d-price">
@@ -467,8 +487,9 @@ function openDetail(id) {
           <div class="d-big">${fmt(p.price)}</div>
         </div>
         <div>
-          <div class="pp-label">95新全套回收参考</div>
+          <div class="pp-label">${basisLabel(p)}</div>
           <div class="d-big accent">${fmtShort(p.low)} <span class="dash">~</span> ${fmtShort(p.high)}</div>
+          ${badgeMark(p) ? `<div class="d-suspect-line">${badgeMark(p)}</div>` : ""}
         </div>
       </div>
       <div class="d-price-foot">
@@ -483,7 +504,17 @@ function openDetail(id) {
         </svg>
         <div class="d-chart-x"><span>6个月前</span><span>3个月前</span><span>本月</span></div>
       </div>
-      <div class="d-note">口径：95新 · 全套附件 · ${META.dataDate}</div>
+      <div class="d-note">口径：95新 · 全套附件 · ${META.dataDate} · 价格类型：${BASIS_TEXT[p.basis] || "未标注"}</div>
+    </div>
+
+    <div class="card src-card${isSuspect(p) ? " is-suspect" : ""}">
+      <div class="card-t">数据来源与核对</div>
+      <div class="src-row"><span class="src-k">价格口径</span><span class="src-v">${BASIS_TEXT[p.basis] || "未标注 ⚠ 该数据不应直接用于报价"}</span></div>
+      <div class="src-row"><span class="src-k">成色样本</span><span class="src-v">95 新 · 全套附件（裸包/单表需下调）</span></div>
+      <div class="src-row"><span class="src-k">来源类别</span><span class="src-v">${p.src || "未标注"}</span></div>
+      <div class="src-row"><span class="src-k">采集日期</span><span class="src-v">${META.dataDate}</span></div>
+      ${isSuspect(p) ? `<div class="src-warn"><b>⚠ 待核实</b>${p.verify || "近期变动幅度超过 ±15%，已超出正常波动范围，需用自有渠道复核后再报价。"}</div>` : ""}
+      <div class="src-tip">外部行情仅作校验带。门店真实成交流水才是定价基准，建议收购前用自己的渠道再验一遍。</div>
     </div>
 
     <div class="card">
@@ -701,6 +732,7 @@ function toggleMovers() {
 document.addEventListener("DOMContentLoaded", () => {
   $("#dataDate").textContent = META.dataDate;
   $("#metaScope").textContent = META.dataScope;
+  if ($("#basisChip") && META.priceBasis) $("#basisChip").textContent = META.priceBasis;
   renderHome();
 
   $$(".tabbar .tab").forEach(t => t.addEventListener("click", () => go(t.dataset.tab)));
